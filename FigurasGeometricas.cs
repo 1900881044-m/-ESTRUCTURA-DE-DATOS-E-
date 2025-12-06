@@ -1,4 +1,9 @@
-
+csharp
+/*
+ * Universidad:Universidad Estatal Amazonica
+ * Estudiante: Shirley Mileni Peñarreta Montenegro
+ * Fecha:06/12/2025
+ */
 using System;
 
 namespace FigurasGeometricas
