@@ -1,0 +1,95 @@
+using System;
+
+namespace SistemaGestionEstudiantes
+{
+    /// <summary>
+    /// Clase principal que representa a un Estudiante
+    /// Contiene propiedades básicas y un array para 3 teléfonos
+    /// </summary>
+    class Estudiante
+    {
+        // Propiedades públicas
+        public int ID { get; set; }
+        public string Nombres { get; set; }
+        public string Apellidos { get; set; }
+        public string Direccion { get; set; }
+        
+        // Array para almacenar exactamente 3 números de teléfono
+        public string[] Telefonos = new string[3];
+
+        /// <summary>
+        /// Constructor que inicializa todos los datos del estudiante
+        /// </summary>
+        public Estudiante()
+        {
+            // Inicializar con los datos específicos solicitados
+            ID = 202401;
+            Nombres = "Shirley Mileni";
+            Apellidos = "Peñarreta Montenegro";
+            Direccion = "Barrio El Rosario";
+            
+            // Asignar los 3 números de teléfono al array
+            Telefonos[0] = "0982587457";  // Primer teléfono
+            Telefonos[1] = "0990609538";  // Segundo teléfono  
+            Telefonos[2] = "0997729239";  // Tercer teléfono
+        }
+
+        /// <summary>
+        /// Método para mostrar todos los datos del estudiante
+        /// Incluye el recorrido completo del array de teléfonos
+        /// </summary>
+        public void MostrarDatos()
+        {
+            Console.WriteLine("===========================================");
+            Console.WriteLine("        REGISTRO DEL ESTUDIANTE");
+            Console.WriteLine("===========================================");
+            Console.WriteLine($"ID: {ID}");
+            Console.WriteLine($"Nombres: {Nombres}");
+            Console.WriteLine($"Apellidos: {Apellidos}");
+            Console.WriteLine($"Dirección: {Direccion}");
+            Console.WriteLine();
+            Console.WriteLine("Teléfonos registrados:");
+            
+            // Recorrer el array usando un bucle for
+            for (int i = 0; i < Telefonos.Length; i++)
+            {
+                Console.WriteLine($"  Teléfono {i + 1}: {Telefonos[i]}");
+            }
+            
+            Console.WriteLine("===========================================\n");
+        }
+    }
+
+    class Program
+    {
+        /// <summary>
+        /// Método principal - Punto de entrada del programa
+        /// </summary>
+        static void Main(string[] args)
+        {
+            Console.Clear();
+            Console.WriteLine("SISTEMA DE REGISTRO ESTUDIANTIL");
+            Console.WriteLine("===============================\n");
+            
+            // Crear una instancia de la clase Estudiante
+            Estudiante estudiante = new Estudiante();
+            
+            Console.WriteLine("✅ Estudiante registrado exitosamente!\n");
+            
+            // Mostrar todos los datos del estudiante
+            estudiante.MostrarDatos();
+            
+            // Ejemplo de acceso directo a los elementos del array
+            Console.WriteLine("Acceso individual a teléfonos:");
+            Console.WriteLine($"  Teléfono 1: {estudiante.Telefonos[0]}");
+            Console.WriteLine($"  Teléfono 2: {estudiante.Telefonos[1]}");
+            Console.WriteLine($"  Teléfono 3: {estudiante.Telefonos[2]}");
+            
+            // Mostrar información técnica del array
+            Console.WriteLine($"\nEl array contiene {estudiante.Telefonos.Length} números de teléfono");
+            
+            Console.WriteLine("\nPresione cualquier tecla para salir...");
+            Console.ReadKey();
+        }
+    }
+}
