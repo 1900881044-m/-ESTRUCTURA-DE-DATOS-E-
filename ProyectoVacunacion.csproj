@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+// 1. Crear el conjunto universo de 500 ciudadanos
+var ciudadanos = new HashSet<string>();
+for (int i = 1; i <= 500; i++) ciudadanos.Add($"Ciudadano {i}");
+
+// 2. Crear vacunados Pfizer (75)
+var pfizer = new HashSet<string>();
+for (int i = 1; i <= 75; i++) pfizer.Add($"Ciudadano {i}");
+
+// 3. Crear vacunados AstraZeneca (75)
+var astra = new HashSet<string>();
+for (int i = 50; i <= 124; i++) astra.Add($"Ciudadano {i}");
+
+// --- OPERACIONES DE CONJUNTOS ---
+
+// A. Ambos (Intersección)
+var ambos = new HashSet<string>(pfizer);
+ambos.IntersectWith(astra);
+
+// B. No vacunados (Universo - Unión)
+var vacunados = new HashSet<string>(pfizer);
+vacunados.UnionWith(astra);
+var noVacunados = new HashSet<string>(ciudadanos);
+noVacunados.ExceptWith(vacunados);
+
+// C. Solo Pfizer (Diferencia)
+var soloPfizer = new HashSet<string>(pfizer);
+soloPfizer.ExceptWith(astra);
+
+// D. Solo AstraZeneca (Diferencia)
+var soloAstra = new HashSet<string>(astra);
+soloAstra.ExceptWith(pfizer);
+
+// --- MOSTRAR RESULTADOS ---
+Console.WriteLine("======= REPORTE DE VACUNACIÓN =======");
+Console.WriteLine($"Ciudadanos no vacunados: {noVacunados.Count}");
+Console.WriteLine($"Con ambas dosis: {ambos.Count}");
+Console.WriteLine($"Solo con Pfizer: {soloPfizer.Count}");
+Console.WriteLine($"Solo con AstraZeneca: {soloAstra.Count}");
+Console.WriteLine("=====================================");
