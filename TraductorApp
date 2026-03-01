@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace TraductorApp
+{
+    class Program
+    {
+        static Dictionary<string, string> diccionario = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        static void Main(string[] args)
+        {
+            // Palabras iniciales
+            diccionario.Add("Time", "Tiempo");
+            diccionario.Add("Person", "Persona");
+            diccionario.Add("Year", "Año");
+            diccionario.Add("Way", "Camino");
+            diccionario.Add("Day", "Día");
+            diccionario.Add("Thing", "Cosa");
+            diccionario.Add("Man", "Hombre");
+            diccionario.Add("World", "Mundo");
+            diccionario.Add("Life", "Vida");
+            diccionario.Add("Hand", "Mano");
+            diccionario.Add("Eye", "Ojo");
+
+            int opcion;
+            do
+            {
+                Console.WriteLine("\n==================== MENÚ ====================");
+                Console.WriteLine("1. Traducir una frase");
+                Console.WriteLine("2. Agregar palabras al diccionario");
+                Console.WriteLine("0. Salir");
+                Console.Write("\nSeleccione una opción: ");
+                
+                if (!int.TryParse(Console.ReadLine(), out opcion)) continue;
+
+                if (opcion == 1) Traducir();
+                else if (opcion == 2) Agregar();
+
+            } while (opcion != 0);
+        }
+
+        static void Traducir()
+        {
+            Console.WriteLine("\nIngrese la frase:");
+            string entrada = Console.ReadLine() ?? "";
+            // Divide la frase manteniendo espacios y signos
+            string[] tokens = Regex.Split(entrada, @"(\W+)");
+            string resultado = "";
+
+            foreach (var t in tokens)
+            {
+                if (diccionario.ContainsKey(t)) resultado += diccionario[t];
+                else resultado += t;
+            }
+            Console.WriteLine("\nResultado: " + resultado);
+        }
+
+        static void Agregar()
+        {
+            Console.Write("Palabra en Inglés: ");
+            string eng = Console.ReadLine() ?? "";
+            Console.Write("Traducción en Español: ");
+            string esp = Console.ReadLine() ?? "";
+
+            if (!diccionario.ContainsKey(eng)) {
+                diccionario.Add(eng, esp);
+                Console.WriteLine("¡Guardado con éxito!");
+            } else {
+                Console.WriteLine("La palabra ya existe en el diccionario.");
+            }
+        }
+    }
+}
