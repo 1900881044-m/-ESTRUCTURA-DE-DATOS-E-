@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+namespace SistemaBiblioteca
+{
+    class Program
+    {
+        // MAPA: ISBN (Clave) -> Título (Valor). Búsqueda instantánea.
+        static Dictionary<string, string> mapaLibros = new Dictionary<string, string>();
+        
+        // CONJUNTO: Categorías únicas. Evita duplicados.
+        static HashSet<string> conjuntoCategorias = new HashSet<string>();
+
+        static void Main(string[] args)
+        {
+            Stopwatch reloj = new Stopwatch();
+            reloj.Start();
+
+            Console.WriteLine("--- REGISTRO DE BIBLIOTECA (MAPAS Y CONJUNTOS) ---");
+
+            // 1. REGISTRO
+            Registrar("978-01", "Cien años de soledad", "Literatura");
+            Registrar("978-02", "1984", "Distopía");
+            Registrar("978-01", "Repetido", "Prueba"); // El mapa lo rechazará
+
+            // 2. REPORTERÍA
+            Console.WriteLine("\n--- REPORTE DE LIBROS ---");
+            foreach (var libro in mapaLibros)
+                Console.WriteLine($"ISBN: {libro.Key} | Título: {libro.Value}");
+
+            Console.WriteLine($"\nCategorías únicas: {string.Join(", ", conjuntoCategorias)}");
+
+            reloj.Stop();
+
+            // 3. ANÁLISIS REQUERIDO
+            Console.WriteLine("\n================ ANALISIS TECNICO ================");
+            Console.WriteLine($"Tiempo de ejecución: {reloj.Elapsed.TotalMilliseconds} ms");
+            Console.WriteLine("Estructura: Dictionary (Mapas) y HashSet (Conjuntos).");
+            Console.WriteLine("Ventaja: Búsqueda O(1) y control automático de categorías.");
+            Console.WriteLine("Agente IA: Gemini. Código generado: 95%.");
+            Console.WriteLine("==================================================");
+        }
+
+        static void Registrar(string isbn, string titulo, string cat)
+        {
+            if (mapaLibros.TryAdd(isbn, titulo))
+            {
+                conjuntoCategorias.Add(cat);
+                Console.WriteLine($"[OK] Registrado: {titulo}");
+            }
+            else { Console.WriteLine($"[ERROR] ISBN {isbn} ya existe."); }
+        }
+    }
+}
