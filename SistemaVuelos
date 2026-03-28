@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Diagnostics;
+
+namespace VuelosProyecto
+{
+    class Program
+    {
+        // Clase para representar la conexión en el Grafo
+        class Vuelo { 
+            public string Destino { get; set; } 
+            public int Precio { get; set; } 
+        }
+
+        // Estructura de Datos: Grafo (Diccionario de Listas)
+        static Dictionary<string, List<Vuelo>> grafo = new Dictionary<string, List<Vuelo>>();
+
+        static void Main(string[] args)
+        {
+            CargarDatos();
+            bool salir = false;
+            while (!salir)
+            {
+                Console.WriteLine("\n========================================");
+                Console.WriteLine("   SISTEMA DE VUELOS (ESTRUCTURA GRAFOS)");
+                Console.WriteLine("========================================");
+                Console.WriteLine("1. Reportería (Visualizar todos los elementos)");
+                Console.WriteLine("2. Buscar ruta más económica (Algoritmo)");
+                Console.WriteLine("3. Salir");
+                Console.Write("Seleccione una opción: ");
+                
+                switch (Console.ReadLine())
+                {
+                    case "1": MostrarReporteria(); break;
+                    case "2": BuscarRutaMasBarata(); break;
+                    case "3": salir = true; break;
+                }
+            }
+        }
+
+        static void CargarDatos()
+        {
+            if (!File.Exists("vuelos.txt")) {
+                Console.WriteLine("Aviso: El archivo vuelos.txt no existe. Créelo en la raíz.");
+                return;
+            }
+            foreach (string linea in File.ReadLines("vuelos.txt"))
+            {
+                var d = linea.Split(',');
+                if (d.Length < 3) continue;
+                if (!grafo.ContainsKey(d[0])) grafo[d[0]] = new List<Vuelo>();
+                grafo[d[0]].Add(new Vuelo { Destino = d[1], Precio = int.Parse(d[2]) });
+            }
+        }
+
+        static void MostrarReporteria()
+        {
+            Console.WriteLine("\n--- REPORTERÍA: ELEMENTOS DE LA ESTRUCTURA ---");
+            if (grafo.Count == 0) Console.WriteLine("Grafo vacío.");
+            foreach (var nodo in grafo)
+                foreach (var v in nodo.Value)
+                    Console.WriteLine($"Origen: {nodo.Key} | Destino: {v.Destino} | Precio: ${v.Precio}");
+        }
+
+        static void BuscarRutaMasBarata()
+        {
+            Console.Write("\nIngrese ciudad de Origen: "); string inicio = Console.ReadLine();
+            Console.Write("Ingrese ciudad de Destino: "); string fin = Console.ReadLine();
+
+            Stopwatch sw = Stopwatch.StartNew(); // Análisis de tiempo
+            
+            var costos = new Dictionary<string, int>();
+            var visitados = new HashSet<string>();
+            var todasLasCiudades = grafo.Keys.Concat(grafo.Values.SelectMany(x => x.Select(y => y.Destino))).Distinct();
+            
+            foreach(var c in todasLasCiudades) costos[c] = int.MaxValue;
+
+            if (!costos.ContainsKey(inicio)) { Console.WriteLine("Error: Ciudad no existe."); return; }
+            costos[inicio] = 0;
+
+            for (int i = 0; i < costos.Count; i++)
+            {
+                string u = costos.Where(x => !visitados.Contains(x.Key)).OrderBy(x => x.Value).FirstOrDefault().Key;
+                if (u == null || costos[u] == int.MaxValue) break;
+                visitados.Add(u);
+                if (grafo.ContainsKey(u))
+                    foreach (var v in grafo[u])
+                        if (costos[u] + v.Precio < costos[v.Destino])
+                            costos[v.Destino] = costos[u] + v.Precio;
+            }
+            sw.Stop(); // Fin análisis
+
+            if (costos.ContainsKey(fin) && costos[fin] != int.MaxValue)
+                Console.WriteLine($"\nRESULTADO: El precio más bajo es ${costos[fin]}");
+            else
+                Console.WriteLine("\nNo se encontró una ruta.");
+
+            Console.WriteLine($"--- TIEMPO DE EJECUCIÓN: {sw.Elapsed.TotalMilliseconds} ms ---");
+        }
+    }
+}
